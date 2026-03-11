@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Laços de Repetição</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 20px;
+        }
+
+        h1 {
+            color: blue;
+        }
+
+        .bloco {
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Laços de Repetição</h1>
+
+    <div class="bloco">
+        <h2>O que são?</h2>
+        <p>
+            Laços de repetição são estruturas usadas para repetir um código várias vezes.
+            Eles ajudam a evitar escrever a mesma coisa muitas vezes.
+        </p>
+    </div>
+
+    <div class="bloco">
+        <h2>For</h2>
+        <p>Usamos quando sabemos quantas vezes vai repetir.</p>
+
+<pre>
+for (int i = 0; i < 5; i++) {
+    System.out.println(i);
+}
+</pre>
+    </div>
+
+    <div class="bloco">
+        <h2>While</h2>
+        <p>Repete enquanto a condição for verdadeira.</p>
+
+<pre>
+int i = 0;
+
+while (i < 5) {
+    System.out.println(i);
+    i++;
+}
+</pre>
+    </div>
+
+    <div class="bloco">
+        <h2>Do While</h2>
+        <p>Executa pelo menos uma vez antes de verificar a condição.</p>
+
+<pre>
+int i = 0;
+
+do {
+    System.out.println(i);
+    i++;
+} while (i < 5);
+</pre>
+    </div>
+
+    <div class="bloco">
+        <h2>Avaliação</h2>
+
+        <form>
+            <label>Seu nome:</label><br>
+            <input type="text"><br><br>
+
+            <label>Você entendeu?</label><br>
+            <input type="radio" name="resposta"> Sim<br>
+            <input type="radio" name="resposta"> Não<br><br>
+
+            <label>Comentário:</label><br>
+            <textarea rows="3"></textarea><br><br>
+
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    
+</body>
+</html>19:33 03/03/2026
