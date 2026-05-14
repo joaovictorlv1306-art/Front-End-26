@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infinity Bank - VIP</title>
+
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: white;
+      width: 450px;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #4b0082;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      border: none;
+      border-radius: 6px;
+      padding: 10px 12px;
+      cursor: pointer;
+      color: white;
+      font-size: 14px;
+    }
+
+    .btn-add {
+      background: #4b0082;
+    }
+
+    .btn-add:hover {
+      background: #36005f;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .nome {
+      flex: 1;
+      font-size: 16px;
+    }
+
+    .riscado {
+      text-decoration: line-through;
+      color: gray;
+    }
+
+    .acoes {
+      display: flex;
+      gap: 5px;
+    }
+
+    .concluir {
+      background: #16a34a;
+    }
+
+    .editar {
+      background: #2563eb;
+    }
+
+    .excluir {
+      background: #dc2626;
+    }
+
+    .concluir:hover {
+      background: #15803d;
+    }
+
+    .editar:hover {
+      background: #1d4ed8;
+    }
+
+    .excluir:hover {
+      background: #b91c1c;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="card">
+
+    <h1>Lista de Convidados VIP</h1>
+
+    <div class="input-area">
+      <input type="text" id="nomeInput" placeholder="Digite o nome">
+      <button class="btn-add" id="adicionar">Adicionar</button>
+    </div>
+
+    <ul id="lista"></ul>
+
+  </div>
+
+  <script>
+
+    const convidados = [];
+
+    const input = document.getElementById("nomeInput");
+    const botao = document.getElementById("adicionar");
+    const lista = document.getElementById("lista");
+
+    botao.addEventListener("click", adicionarConvidado);
+
+    function adicionarConvidado() {
+
+      const nome = input.value.trim();
+
+      if (nome === "") {
+        alert("Digite um nome válido!");
+        return;
+      }
+
+      convidados.push(nome);
+
+      renderizarLista();
+
+      input.value = "";
+      input.focus();
+    }
+
+    function renderizarLista() {
+
+      lista.innerHTML = "";
+
+      convidados.forEach((convidado, index) => {
+
+        const li = document.createElement("li");
+
+        li.innerHTML = `
+          <span class="nome">${convidado}</span>
+
+          <div class="acoes">
+
+            <button class="concluir">
+              Concluir
+            </button>
+
+            <button class="editar">
+              Editar
+            </button>
+
+            <button class="excluir">
+              Excluir
+            </button>
+
+          </div>
+        `;
+
+        // Concluir
+        li.querySelector(".concluir")
+          .addEventListener("click", () => {
+
+            li.querySelector(".nome")
+              .classList.toggle("riscado");
+          });
+
+        // Editar
+        li.querySelector(".editar")
+          .addEventListener("click", () => {
+
+            const novoNome = prompt(
+              "Editar nome:",
+              convidados[index]
+            );
+
+            if (novoNome !== null && novoNome.trim() !== "") {
+
+              convidados[index] = novoNome.trim();
+
+              renderizarLista();
+            }
+          });
+
+        // Excluir
+        li.querySelector(".excluir")
+          .addEventListener("click", () => {
+
+            convidados.splice(index, 1);
+
+            renderizarLista();
+          });
+
+        lista.appendChild(li);
+      });
+    }
+
+  </script>
+
+</body>
+</html>

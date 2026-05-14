@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infinity Card Guard</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
+    }
+
+    body{
+      background:#f3f4f6;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+    }
+
+    .card{
+      width:450px;
+      background:white;
+      padding:30px;
+      border-radius:12px;
+      box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    h1{
+      text-align:center;
+      color:#4b0082;
+      margin-bottom:25px;
+    }
+
+    .campo{
+      margin-bottom:18px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:6px;
+      font-weight:bold;
+    }
+
+    input{
+      width:100%;
+      padding:12px;
+      border:1px solid #ccc;
+      border-radius:6px;
+      font-size:16px;
+    }
+
+    button{
+      width:100%;
+      padding:12px;
+      background:#4b0082;
+      color:white;
+      border:none;
+      border-radius:6px;
+      font-size:16px;
+      cursor:pointer;
+    }
+
+    button:hover{
+      background:#36005f;
+    }
+
+    #resultado{
+      margin-top:25px;
+      padding:20px;
+      border-radius:8px;
+      background:#f9fafb;
+      border:1px solid #eee;
+      line-height:1.9;
+    }
+
+    .titulo{
+      color:#4b0082;
+      font-weight:bold;
+    }
+
+    .valido{
+      color:green;
+      font-weight:bold;
+    }
+
+    .invalido{
+      color:red;
+      font-weight:bold;
+    }
+
+  </style>
+
+</head>
+<body>
+
+  <div class="card">
+
+    <h1>Infinity Card Guard</h1>
+
+    <div class="campo">
+      <label>Número do Cartão</label>
+
+      <input
+        type="text"
+        id="cartao"
+        maxlength="19"
+        placeholder="Digite o número do cartão"
+      >
+    </div>
+
+    <button id="analisar">
+      Analisar Cartão
+    </button>
+
+    <div id="resultado"></div>
+
+  </div>
+
+  <script>
+
+    const botao =
+      document.getElementById("analisar");
+
+    botao.addEventListener("click", analisarCartao);
+
+    function analisarCartao(){
+
+      const input =
+        document.getElementById("cartao");
+
+      const resultado =
+        document.getElementById("resultado");
+
+      // Remove espaços e pontos
+      const numero =
+        input.value.replace(/\D/g, "");
+
+      // Validação tamanho
+      if(numero.length < 13 || numero.length > 16){
+
+        resultado.innerHTML = `
+          <p class="invalido">
+            Número inválido! O cartão deve ter entre 13 e 16 dígitos.
+          </p>
+        `;
+
+        return;
+      }
+
+      // Algoritmo de Luhn
+      const valido = validarLuhn(numero);
+
+      // Identificação da bandeira
+      const bandeira = identificarBandeira(numero);
+
+      // Identificação setor
+      const setor = identificarSetor(numero);
+
+      // Banco emissor
+      const banco = identificarBanco(numero);
+
+      resultado.innerHTML = `
+        <p>
+          <span class="titulo">Status:</span>
+          <span class="${valido ? "valido" : "invalido"}">
+            ${valido ? "VÁLIDO ✅" : "INVÁLIDO ❌"}
+          </span>
+        </p>
+
+        <p>
+          <span class="titulo">Bandeira:</span>
+          ${bandeira}
+        </p>
+
+        <p>
+          <span class="titulo">Categoria de Setor:</span>
+          ${setor}
+        </p>
+
+        <p>
+          <span class="titulo">Banco Emissor:</span>
+          ${banco}
+        </p>
+      `;
+    }
+
+    // Algoritmo de Luhn
+    function validarLuhn(numero){
+
+      let soma = 0;
+
+      let inverter = false;
+
+      for(let i = numero.length - 1; i >= 0; i--){
+
+        let digito = parseInt(numero[i]);
+
+        if(inverter){
+
+          digito *= 2;
+
+          if(digito > 9){
+            digito -= 9;
+          }
+        }
+
+        soma += digito;
+
+        inverter = !inverter;
+      }
+
+      return soma % 10 === 0;
+    }
+
+    // Bandeira
+    function identificarBandeira(numero){
+
+      if(numero.startsWith("4")){
+        return "Visa";
+      }
+
+      if(
+        numero.startsWith("51") ||
+        numero.startsWith("52") ||
+        numero.startsWith("53") ||
+        numero.startsWith("54") ||
+        numero.startsWith("55")
+      ){
+        return "MasterCard";
+      }
+
+      if(numero.startsWith("34") || numero.startsWith("37")){
+        return "American Express";
+      }
+
+      if(numero.startsWith("6011")){
+        return "Discover";
+      }
+
+      return "Desconhecida";
+    }
+
+    // Setor industrial
+    function identificarSetor(numero){
+
+      const primeiroDigito = numero[0];
+
+      switch(primeiroDigito){
+
+        case "1":
+          return "Companhias Aéreas";
+
+        case "2":
+          return "Serviços Financeiros";
+
+        case "3":
+          return "Turismo e Entretenimento";
+
+        case "4":
+        case "5":
+          return "Instituições Bancárias";
+
+        case "6":
+          return "Comércio e Bancos";
+
+        case "7":
+          return "Petróleo e Transporte";
+
+        case "8":
+          return "Telecomunicações";
+
+        case "9":
+          return "Governo e Serviços Nacionais";
+
+        default:
+          return "Setor desconhecido";
+      }
+    }
+
+    // Banco emissor
+    function identificarBanco(numero){
+
+      const prefixo = numero.substring(0,4);
+
+      switch(prefixo){
+
+        case "4011":
+          return "Infinity Bank";
+
+        case "5100":
+          return "Master Financial";
+
+        case "6011":
+          return "Discover Bank";
+
+        case "3714":
+          return "American Express";
+
+        default:
+          return "Banco não identificado";
+      }
+    }
+
+  </script>
+
+</body>
+</html>
